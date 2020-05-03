@@ -4,8 +4,6 @@ services:
     image: postgres:9.4
     volumes:
       - "postgres_data:/var/lib/postgresql/data"
-    deploy:
-      replicas: 1
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -23,10 +21,19 @@ services:
     networks:
       - backend
 
+
   django_swarm_app:
     image: django_swarm_app:latest
     build: .
     command: [ "python", "manage.py", "runserver", "0.0.0.0:80"]
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+      update_config:
+        parallelism: 2
+        delay: 10s
     depends_on:
       - postgres
       - redis
@@ -37,14 +44,6 @@ services:
       - DATABASE_PORT=5432
       - REDIS_CACHE_BACKEND=django_redis.cache.RedisCache
       - REDIS_CACHE_LOCATION=redis://redis:6379/
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-      update_config:
-        parallelism: 2
-        delay: 10s
     networks:
       - frontend
       - backend

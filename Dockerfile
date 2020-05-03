@@ -4,7 +4,6 @@ WORKDIR /usr/src/app
 
 COPY swarm ./
 RUN apt-get update && apt-get -y upgrade
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 RUN pip install --upgrade setuptools
 RUN pip install --no-cache-dir -r requirements.txt
 
