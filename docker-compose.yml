@@ -23,7 +23,7 @@ services:
 
 
   django_swarm_app:
-    image: django_swarm_app:latest
+    image: fuzumoe/django_swarm_app:latest
     build: .
     command: [ "python", "manage.py", "runserver", "0.0.0.0:80"]
     deploy:
